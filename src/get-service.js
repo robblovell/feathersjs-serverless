@@ -8,6 +8,9 @@ module.exports = function getService (feathersApp, path) {
   let service = pathArray.join('/')
   if (!feathersApp.service(service)) {
     feathersId = pathArray.pop()
+    if (!isNaN(feathersId)) {
+      feathersId = parseInt(feathersId)
+    }
     service = pathArray.join('/')
   }
 

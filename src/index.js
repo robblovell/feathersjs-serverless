@@ -103,8 +103,9 @@ module.exports = feathersApp => {
 
         await self.setupPromise
 
+        // Extract the path from the event.
         const {
-          resource,
+          path,
           httpMethod: method,
           body: bodyAsString
         } = event
@@ -114,12 +115,12 @@ module.exports = feathersApp => {
           ? JSON.parse(bodyAsString)
           : {}
 
-        const { service: serviceName, feathersId } = getService(self, resource)
+        const { service: serviceName, feathersId } = getService(self, path)
 
         if (!serviceName || !self.service(serviceName)) {
           return cb(null, {
             statusCode: 404,
-            body: JSON.stringify({ error: `Service not found: ${resource}` })
+            body: JSON.stringify({ error: `Service not found: ${path}` })
           })
         }
 
