@@ -108,20 +108,36 @@ module.exports = feathersApp => {
         let {
           resource,
           path,
+          rawPath,
           httpMethod: method,
           body: bodyAsString
         } = event
+
+        if (!path) {
+          path = resource
+        }
+        if (!path) {
+          path = rawPath
+        }
+        if (event.requestContext.http) {
+          if (!path) {
+            path = event.requestContext.http.path
+          }
+          if (!method) {
+            method = event.requestContext.http.method
+          }
+        }
         console.log('resource: ', resource)
         console.log('path: ', path)
         console.log('httpMethod: ', method)
         console.log('body: ', bodyAsString)
 
-        if (!path) {
-          path = resource
-        }
 
-        const query = fixQueryParameters2(event.multiValueQueryStringParameters)
-        console.log(query)
+        let query = fixQueryParameters2(event.queryStringParameters) || {}
+        if (event.multiValueQueryStringParameters) {
+          query = fixQueryParameters2(event.multiValueQueryStringParameters) || {}
+        }
+        console.log('Query: ', query)
         const body = bodyAsString
           ? JSON.parse(bodyAsString)
           : {}
