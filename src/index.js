@@ -104,11 +104,15 @@ module.exports = feathersApp => {
         await self.setupPromise
 
         // Extract the path from the event.
-        const {
+        let {
+          resource,
           path,
           httpMethod: method,
           body: bodyAsString
         } = event
+        if (!path) {
+          path = resource
+        }
 
         const query = fixQueryParameters2(event.multiValueQueryStringParameters)
         const body = bodyAsString
