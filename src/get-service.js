@@ -1,5 +1,11 @@
 // encapsulates the logic to decide the service and feathersId
 module.exports = function getService (feathersApp, path) {
+  console.log(path)
+  if (!path) {
+    console.warn('Path is null in getService')
+    return { service: null, feathersId: null }
+  }
+
   const pathArray = path
     .replace(/^\//, '') // removes the first / character
     .split(/\//g)

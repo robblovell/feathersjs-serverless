@@ -102,6 +102,7 @@ module.exports = feathersApp => {
         }
 
         await self.setupPromise
+        console.log('event: ', event)
 
         // Extract the path from the event.
         let {
@@ -110,16 +111,26 @@ module.exports = feathersApp => {
           httpMethod: method,
           body: bodyAsString
         } = event
+        console.log('resource: ', resource)
+        console.log('path: ', path)
+        console.log('httpMethod: ', method)
+        console.log('body: ', bodyAsString)
+
         if (!path) {
           path = resource
         }
 
         const query = fixQueryParameters2(event.multiValueQueryStringParameters)
+        console.log(query)
         const body = bodyAsString
           ? JSON.parse(bodyAsString)
           : {}
+        console.log(bodyAsString)
 
         const { service: serviceName, feathersId } = getService(self, path)
+
+        console.log('serviceName', serviceName)
+        console.log('feathersId', feathersId)
 
         if (!serviceName || !self.service(serviceName)) {
           return cb(null, {
@@ -130,6 +141,7 @@ module.exports = feathersApp => {
 
         const service = self.service(serviceName)
         const feathersMethod = getFeathersMethod(method, feathersId)
+        console.log('feathersMethod', feathersMethod)
 
         if (!feathersMethod || !service[feathersMethod]) {
           return cb(null, {
